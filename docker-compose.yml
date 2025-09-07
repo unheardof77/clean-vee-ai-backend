@@ -1,0 +1,35 @@
+services:
+  stt-service:
+    build: ./stt-service
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./shared:/app/shared
+
+  tts-service:
+    build: ./tts-service
+    ports:
+      - "5002:5000"
+    volumes:
+      - ./shared:/app/shared
+
+  ai-service:
+    build: ./ai-service
+    ports:
+      - "5003:5000"
+    volumes:
+      - ./shared:/app/shared
+    environment:
+      - MODEL_SIZE=medium
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./shared:/app/shared
+    depends_on:
+      - stt-service
+      - tts-service
+      - ai-service
+
